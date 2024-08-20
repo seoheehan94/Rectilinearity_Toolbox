@@ -1,5 +1,5 @@
 
-function [SpaceKernel, FreKernel, SpaceKernel_realsize] = AngleFilter(kA, alphaA, theta, mA, xA, yA)
+function [SpaceKernel, FreKernel, SpaceKernel_realsize] = CurveFilter(kA, alphaA, theta, mA, xA, yA)
 
 %%% the function is used to generate banana wavelet kernels.  The kernels
 %%% can be used to filter a image to quantify curvatures.
@@ -33,8 +33,8 @@ sigmaYbend = 2;
 xRotL = cos(alphaA)*xA + sin(alphaA)*yA; 
 yRotL = cos(alphaA)*yA - sin(alphaA)*xA;
 
-%xRotBendL = xRotL + bA * (yRotL).^2;
-xRotBendL = abs(xRotL) + bA * (yRotL);
+xRotBendL = xRotL + bA * (yRotL).^2;
+% xRotBendL = abs(xRotL) + bA * (yRotL);
 yRotBendL = yRotL;
 
 %correct for distortion
@@ -45,7 +45,7 @@ temp=(cos(kA*xRotBendL));
 
 xRotLOrig = cos(0)*xA + sin(0)*yA; 
 pre=(cos(kA*xRotLOrig));
-
+% keyboard;
 throughCount=0;
 i=1;
 while throughCount<2
@@ -132,7 +132,6 @@ realteilL  = preFactorA*gaussPartA.*(cos(kA*xRotBendL) - DCPartRealA);
 realteilL = realteilL.*gaussMask;
 imagteilL  = preFactorA*gaussPartA.*(sin(kA*xRotBendL) - DCPartImagA);
 imagteilL = imagteilL.*gaussMask;
-
 % %%% set values to zeros outside of kernel.
 % ZeroOutSideRadius2L = imcircle(ceil(2*4*sigmaYbend*mA*(1/kA)));
 % KernelSize          = size(ZeroOutSideRadius2L);
@@ -163,7 +162,6 @@ SpaceKernel = complex(norm_realteilL, norm_imagteilL);
 FreKernel   = fft2(SpaceKernel);
 
 SpaceKernel_realsize = complex(norm_realteilL, norm_imagteilL);
-
 
 
 
